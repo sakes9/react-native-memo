@@ -1,11 +1,22 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
+import { useEffect } from 'react';
 import { Button, StyleSheet, View } from 'react-native';
 
 /**
  * ホーム画面
  */
 export default function HomeScreen() {
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => {
+        return <MaterialIcons name="new-label" size={24} color="black" onPress={handleAddLabelPress} />;
+      }
+    });
+  }, []);
+
   /**
    * 「すべてのメモ」た押された時の処理
    */
@@ -39,8 +50,6 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Button title="ラベル追加" onPress={handleAddLabelPress} />
-
       <Button title="すべてのメモ" onPress={handleAllMemoPress} />
 
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
