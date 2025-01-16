@@ -1,7 +1,8 @@
 import Feather from '@expo/vector-icons/Feather';
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
+import { LabelListModal } from '../../src/components/LabelListModal';
 import { LabelTag } from '../../src/components/LabelTag';
 import { MemoListItem } from '../../src/components/MemoListItem';
 
@@ -25,12 +26,33 @@ const MEMO_DATA = [
   }
 ];
 
+// ダミーのラベルデータ
+const LABEL_DATA = [
+  {
+    id: 1,
+    name: 'プログラミング',
+    color: 'blue'
+  },
+  {
+    id: 2,
+    name: 'パスワード',
+    color: 'green'
+  },
+  {
+    id: 3,
+    name: '料理',
+    color: 'orange'
+  }
+];
+
 /**
  * メモ一覧画面
  */
 export default function MemoListScreen() {
   const navigation = useNavigation();
   const { labelId } = useLocalSearchParams();
+
+  const [isLabelListModalVisible, setIsLabelListModalVisible] = useState(false); // ラベルリストモーダルの表示状態
 
   useEffect(() => {
     navigation.setOptions({
@@ -61,6 +83,7 @@ export default function MemoListScreen() {
    */
   const handleMemoLongPress = (memoId: string) => {
     console.log('メモが長押しされました', memoId);
+    setIsLabelListModalVisible(true);
   };
 
   /**
@@ -69,6 +92,22 @@ export default function MemoListScreen() {
    */
   const handleMemoDeletePress = (memoId: string) => {
     console.log('メモが削除されました', memoId);
+  };
+
+  /**
+   * ラベルが選択された時の処理
+   * @param labelId ラベルID
+   */
+  const handleLabelPress = (labelId?: number) => {
+    console.log('ラベルが押されました', labelId);
+    setIsLabelListModalVisible(false);
+  };
+
+  /**
+   * ラベルリストモーダルで閉じるボタンが押されたときの処理
+   */
+  const handleLabelListModalClose = () => {
+    setIsLabelListModalVisible(false);
   };
 
   return (
@@ -96,6 +135,14 @@ export default function MemoListScreen() {
           />
         )}
         keyExtractor={item => item.id}
+      />
+
+      <LabelListModal
+        visible={isLabelListModalVisible}
+        title="ラベル設定"
+        data={LABEL_DATA}
+        onPress={handleLabelPress}
+        onClose={handleLabelListModalClose}
       />
     </View>
   );
