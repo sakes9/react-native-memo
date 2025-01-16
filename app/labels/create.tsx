@@ -1,10 +1,14 @@
+import { Input, InputField } from '@gluestack-ui/themed';
 import { router } from 'expo-router';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import { Button, StyleSheet, View } from 'react-native';
 
 /**
  * ラベル作成画面
  */
 export default function LabelCreateScreen() {
+  const [labelName, setLabelName] = useState<string>(''); // ラベル名
+
   /**
    * 「作成」が押されたときの処理
    */
@@ -14,7 +18,10 @@ export default function LabelCreateScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>ラベル作成</Text>
+      <Input variant="underlined" size="md" backgroundColor="$white" borderColor="$warmGray300">
+        <InputField paddingLeft={'$2'} placeholder="ラベル名" onChangeText={setLabelName} />
+      </Input>
+
       <Button title="作成" onPress={handleCreatePress} />
     </View>
   );
@@ -23,12 +30,6 @@ export default function LabelCreateScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#EFEFF4',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold'
+    backgroundColor: '#EFEFF4'
   }
 });
