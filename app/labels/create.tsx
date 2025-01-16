@@ -1,13 +1,23 @@
-import { Input, InputField } from '@gluestack-ui/themed';
+import { Input, InputField, VStack } from '@gluestack-ui/themed';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Button, StyleSheet, View } from 'react-native';
+import { ColorPicker } from '../../src/components/ColorPicker';
 
 /**
  * ラベル作成画面
  */
 export default function LabelCreateScreen() {
   const [labelName, setLabelName] = useState<string>(''); // ラベル名
+  const [color, setColor] = useState<string | undefined>(undefined); // カラー
+
+  /**
+   * カラーピッカーで色が選択された時の処理
+   * @param color 選択されたカラー
+   */
+  const handleColorPress = (color: string) => {
+    setColor(color);
+  };
 
   /**
    * 「作成」が押されたときの処理
@@ -18,11 +28,15 @@ export default function LabelCreateScreen() {
 
   return (
     <View style={styles.container}>
-      <Input variant="underlined" size="md" backgroundColor="$white" borderColor="$warmGray300">
-        <InputField paddingLeft={'$2'} placeholder="ラベル名" onChangeText={setLabelName} />
-      </Input>
+      <VStack space="lg">
+        <Input variant="underlined" size="md" backgroundColor="$white" borderColor="$warmGray300">
+          <InputField paddingLeft={'$2'} placeholder="ラベル名" onChangeText={setLabelName} />
+        </Input>
 
-      <Button title="作成" onPress={handleCreatePress} />
+        <ColorPicker onPress={handleColorPress} />
+
+        <Button title="作成" onPress={handleCreatePress} />
+      </VStack>
     </View>
   );
 }
