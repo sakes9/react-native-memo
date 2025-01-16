@@ -1,7 +1,28 @@
 import { MaterialIcons } from '@expo/vector-icons';
+import { ListItem } from '@rneui/themed';
 import { router, useNavigation } from 'expo-router';
 import { useEffect } from 'react';
-import { Button, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { LabelListItem } from '../../src/components/LabelListItem';
+
+// ダミーのラベルデータ
+const LABEL_DATA = [
+  {
+    id: 1,
+    name: 'プログラミング',
+    color: 'blue'
+  },
+  {
+    id: 2,
+    name: 'パスワード',
+    color: 'green'
+  },
+  {
+    id: 3,
+    name: '料理',
+    color: 'orange'
+  }
+];
 
 /**
  * ホーム画面
@@ -50,17 +71,28 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Button title="すべてのメモ" onPress={handleAllMemoPress} />
+      <ScrollView contentContainerStyle={{ paddingVertical: 40 }}>
+        {/* すべてのメモ */}
+        <ListItem bottomDivider onPress={handleAllMemoPress}>
+          <ListItem.Content>
+            <ListItem.Title>すべてのメモ</ListItem.Title>
+          </ListItem.Content>
+          <ListItem.Chevron />
+        </ListItem>
 
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Button title="ラベル１" onPress={() => handleLabelPress(1)} />
-        <MaterialIcons name="edit" size={24} color={'gray'} onPress={() => handleEditLabelPress(1)} />
-      </View>
+        <Text style={styles.sectionText}>ラベル</Text>
 
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Button title="ラベル２" onPress={() => handleLabelPress(2)} />
-        <MaterialIcons name="edit" size={24} color={'gray'} onPress={() => handleEditLabelPress(2)} />
-      </View>
+        {/* ラベルリスト */}
+        {LABEL_DATA.map(item => (
+          <LabelListItem
+            key={item.id}
+            color={item.color}
+            name={item.name}
+            onPress={() => handleLabelPress(item.id)}
+            onEditPress={() => handleEditLabelPress(item.id)}
+          />
+        ))}
+      </ScrollView>
     </View>
   );
 }
@@ -68,12 +100,13 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#EFEFF4',
-    alignItems: 'center',
-    justifyContent: 'center'
+    backgroundColor: '#EFEFF4'
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold'
+  sectionText: {
+    marginTop: 30,
+    marginBottom: 10,
+    marginLeft: 14,
+    fontSize: 14,
+    color: '#707070'
   }
 });
