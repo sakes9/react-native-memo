@@ -1,12 +1,17 @@
+import { KeyboardAvoidingView } from '@gluestack-ui/themed';
 import { router, useNavigation } from 'expo-router';
-import { useEffect } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Button, StyleSheet } from 'react-native';
+import { MemoInputForm } from '../../src/components/MemoInputForm';
 
 /**
  * メモ作成画面
  */
 export default function MemoCreateScreen() {
   const navigation = useNavigation();
+
+  const [title, setTitle] = useState<string>(''); // タイトル
+  const [content, setContent] = useState<string>(''); // 内容
 
   useEffect(() => {
     navigation.setOptions({
@@ -24,21 +29,15 @@ export default function MemoCreateScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>メモ作成</Text>
-    </View>
+    <KeyboardAvoidingView style={styles.container} behavior="padding" keyboardVerticalOffset={100}>
+      <MemoInputForm title={title} content={content} onTitleChange={setTitle} onContentChange={setContent} />
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#EFEFF4',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold'
+    backgroundColor: '#ffffff'
   }
 });
