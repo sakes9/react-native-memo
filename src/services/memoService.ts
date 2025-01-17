@@ -33,6 +33,30 @@ const getMemos = async (): Promise<Memo[]> => {
 };
 
 /**
+ * 指定されたIDのメモを取得
+ * @param memoId メモID
+ * @returns メモ
+ */
+const getMemo = async (memoId: string): Promise<Memo | undefined> => {
+  // メモを取得する
+  const rows = await fetch<MemoSchema>({ sql: MemoQueries.SELECT_MEMO_TARGET_ID, params: [memoId] });
+
+  // メモが存在しない場合は undefined を返す
+  if (rows.length === 0) {
+    return undefined;
+  }
+
+  // メモ型に変換する
+  const row = rows[0];
+  return {
+    id: row.id,
+    title: row.title,
+    content: row.content || '',
+    labelId: row.label_id || undefined
+  };
+};
+
+/**
  * メモ追加
  * @param title メモのタイトル
  * @param content メモの内容
@@ -42,4 +66,4 @@ const addMemo = async (title: string, content: string) => {
   await execute({ sql: MemoQueries.INSERT, params: [memoId, title, content] });
 };
 
-export { addMemo, createTable, getMemos };
+export { addMemo, createTable, getMemo, getMemos };

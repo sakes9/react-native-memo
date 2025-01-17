@@ -39,6 +39,24 @@ const SelectMemos = `
 `;
 
 /**
+ * メモIDを指定してメモを取得
+ * @param id メモID
+ */
+const SelectMemoTargetId = `
+  SELECT
+    id,
+    label_id,
+    title,
+    content,
+    created_at,
+    updated_at
+  FROM
+    memos
+  WHERE
+    id = ?
+`;
+
+/**
  * メモ追加
  * @param id メモID
  * @param title タイトル
@@ -59,6 +77,7 @@ const InsertMemo = `
 const MemoQueries = Object.freeze({
   CREATE_TABLE: CreateTableMemos,
   SELECT_MEMOS: SelectMemos,
+  SELECT_MEMO_TARGET_ID: SelectMemoTargetId,
   INSERT: InsertMemo
 });
 
