@@ -5,30 +5,20 @@ import { useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { LabelListItem } from '../../src/components/LabelListItem';
 
-// ダミーのラベルデータ
-const LABEL_DATA = [
-  {
-    id: 1,
-    name: 'プログラミング',
-    color: 'blue'
-  },
-  {
-    id: 2,
-    name: 'パスワード',
-    color: 'green'
-  },
-  {
-    id: 3,
-    name: '料理',
-    color: 'orange'
-  }
-];
+// Recoil
+import { useRecoilState } from 'recoil';
+import { selectedLabelIdState } from '../../src/recoils/selectedLabelIdState';
+
+// ダミーデータ
+import { LABEL_DATA } from '../../src/dummy_data/labelData';
 
 /**
  * ホーム画面
  */
 export default function HomeScreen() {
   const navigation = useNavigation();
+
+  const [selectedLabelId, setSelectedLabelId] = useRecoilState(selectedLabelIdState);
 
   useEffect(() => {
     navigation.setOptions({
@@ -42,6 +32,7 @@ export default function HomeScreen() {
    * 「すべてのメモ」た押された時の処理
    */
   const handleAllMemoPress = () => {
+    setSelectedLabelId(undefined); // ラベルIDを未選択にする
     router.push({ pathname: '/memos' });
   };
 
@@ -50,8 +41,8 @@ export default function HomeScreen() {
    * @param labelId ラベルID
    */
   const handleLabelPress = (labelId: number) => {
-    const params = { labelId: labelId };
-    router.push({ pathname: '/memos', params: params });
+    setSelectedLabelId(labelId); // ラベルIDを設定する
+    router.push({ pathname: '/memos' });
   };
 
   /**

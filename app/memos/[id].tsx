@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react';
 import { Button, StyleSheet } from 'react-native';
 import { MemoInputForm } from '../../src/components/MemoInputForm';
 
+// ダミーデータ
+import { MEMO_DATA } from '../../src/dummy_data/memoData';
+
 /**
  * メモ修正画面
  */
@@ -21,6 +24,15 @@ export default function MemoEditScreen() {
       }
     });
   }, []);
+
+  useEffect(() => {
+    // 選択されたメモ情報を設定する
+    const memo = MEMO_DATA.find(memo => memo.id === id);
+    if (memo) {
+      setTitle(memo.title);
+      setContent(memo.content);
+    }
+  }, [id]);
 
   /**
    * 「保存」が押されたときの処理

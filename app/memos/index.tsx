@@ -1,56 +1,31 @@
 import Feather from '@expo/vector-icons/Feather';
-import { router, useLocalSearchParams, useNavigation } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { LabelListModal } from '../../src/components/LabelListModal';
 import { LabelTag } from '../../src/components/LabelTag';
 import { MemoListItem } from '../../src/components/MemoListItem';
+import { type Label } from '../../src/types/label';
+import { type Memo } from '../../src/types/memo';
 
-// ダミーのメモデータ
-const MEMO_DATA = [
-  {
-    id: 'ABCD',
-    name: 'useStateについて',
-    content: 'useStateの説明',
-    label: { name: 'プログラミング', color: 'blue' }
-  },
-  {
-    id: 'EFGH',
-    name: 'アカウント',
-    content: 'メールアドレス: abc123@sample.com\nパスワード: abc123'
-  },
-  {
-    id: 'IJKL',
-    name: 'オムライス レシピ',
-    content: '卵: 2個\nごはん: 200g\n玉ねぎ: 1/4個\nケチャップ'
-  }
-];
+// Recoil
+import { useRecoilValue } from 'recoil';
+import { selectedLabelIdState } from '../../src/recoils/selectedLabelIdState';
 
-// ダミーのラベルデータ
-const LABEL_DATA = [
-  {
-    id: 1,
-    name: 'プログラミング',
-    color: 'blue'
-  },
-  {
-    id: 2,
-    name: 'パスワード',
-    color: 'green'
-  },
-  {
-    id: 3,
-    name: '料理',
-    color: 'orange'
-  }
-];
+// ダミーのデータ
+import { LABEL_DATA } from '../../src/dummy_data/labelData';
+import { MEMO_DATA } from '../../src/dummy_data/memoData';
 
 /**
  * メモ一覧画面
  */
 export default function MemoListScreen() {
   const navigation = useNavigation();
-  const { labelId } = useLocalSearchParams();
+
+  const selectedLabelId = useRecoilValue(selectedLabelIdState); // 選択されているラベルID
+  const [labels, setLabels] = useState<Label[]>([]); // ラベルリスト
+  const [memos, setMemos] = useState<Memo[]>([]); // メモリスト
+  const selectedLabel = labels.find(label => label.id === selectedLabelId); // 選択されているラベルの情報
 
   const [isLabelListModalVisible, setIsLabelListModalVisible] = useState(false); // ラベルリストモーダルの表示状態
 
@@ -60,6 +35,17 @@ export default function MemoListScreen() {
         return <Feather name="edit" size={24} color="black" onPress={handleCreatePress} />;
       }
     });
+  }, []);
+
+  useEffect(() => {
+    // ラベルリストを設定する
+    const labels = LABEL_DATA;
+    setLabels(labels);
+
+    // メモリストを設定する
+    // 選択されているラベルIDがある場合は、そのラベルに紐づくメモを表示する
+    const filteredMemos = selectedLabelId ? MEMO_DATA.filter(memo => memo.labelId === selectedLabelId) : MEMO_DATA;
+    setMemos(filteredMemos);
   }, []);
 
   /**
@@ -114,24 +100,24 @@ export default function MemoListScreen() {
     <View style={styles.container}>
       <FlatList
         ListHeaderComponent={
-          labelId ? (
+          selectedLabel ? (
             <View style={{ margin: 10 }}>
-              <LabelTag color="blue" name={`ラベルID: ${labelId}`} />
+              <LabelTag color={selectedLabel.color} name={selectedLabel.name} />
             </View>
           ) : (
             <></>
           )
         }
         contentContainerStyle={{ paddingBottom: 100 }}
-        data={MEMO_DATA}
+        data={memos}
         renderItem={({ item }) => (
           <MemoListItem
-            name={item.name}
+            name={item.title}
             content={item.content}
             onPress={() => handleMemoPress(item.id)}
             onLongPress={() => handleMemoLongPress(item.id)}
             onDeletePress={() => handleMemoDeletePress(item.id)}
-            label={item.label}
+            label={selectedLabelId ? undefined : labels.find(label => label.id === item.labelId)} // ラベルIDが選択されている場合は、メモにラベル情報を表示しない
           />
         )}
         keyExtractor={item => item.id}
@@ -140,7 +126,7 @@ export default function MemoListScreen() {
       <LabelListModal
         visible={isLabelListModalVisible}
         title="ラベル設定"
-        data={LABEL_DATA}
+        data={labels}
         onPress={handleLabelPress}
         onClose={handleLabelListModalClose}
       />
