@@ -15,8 +15,27 @@ const CreateTableMemos = `
   );
 `;
 
+/**
+ * メモ追加
+ * @param id メモID
+ * @param title タイトル
+ * @param content 内容
+ */
+const InsertMemo = `
+  INSERT INTO memos (
+    id,
+    title,
+    content
+  ) VALUES (
+    ?,
+    ?,
+    ?
+  );
+`;
+
 const MemoQueries = Object.freeze({
-  CREATE_TABLE: CreateTableMemos
+  CREATE_TABLE: CreateTableMemos,
+  INSERT: InsertMemo
 });
 
 export { MemoQueries };

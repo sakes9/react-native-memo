@@ -26,7 +26,8 @@
     "react-native-svg": "13.4.0",
     "recoil": "0.7.7",
     "expo-sqlite": "~15.0.6",
-    "expo-file-system": "~18.0.7"
+    "expo-file-system": "~18.0.7",
+    "expo-crypto": "~14.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
