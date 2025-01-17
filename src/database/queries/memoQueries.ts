@@ -16,6 +16,29 @@ const CreateTableMemos = `
 `;
 
 /**
+ * すべてのメモを取得
+ */
+const SelectMemos = `
+  SELECT
+    m.id,
+    m.label_id,
+    m.title,
+    m.content,
+    m.created_at,
+    m.updated_at,
+    l.name,
+    l.color
+  FROM
+    memos m
+  LEFT JOIN
+    labels l
+  ON
+    m.label_id = l.id
+  ORDER BY
+    m.updated_at DESC
+`;
+
+/**
  * メモ追加
  * @param id メモID
  * @param title タイトル
@@ -35,6 +58,7 @@ const InsertMemo = `
 
 const MemoQueries = Object.freeze({
   CREATE_TABLE: CreateTableMemos,
+  SELECT_MEMOS: SelectMemos,
   INSERT: InsertMemo
 });
 

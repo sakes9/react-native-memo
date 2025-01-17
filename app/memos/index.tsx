@@ -1,10 +1,11 @@
 import Feather from '@expo/vector-icons/Feather';
-import { router, useNavigation } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { router, useFocusEffect, useNavigation } from 'expo-router';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Alert, FlatList, StyleSheet, View } from 'react-native';
 import { LabelListModal } from '../../src/components/LabelListModal';
 import { LabelTag } from '../../src/components/LabelTag';
 import { MemoListItem } from '../../src/components/MemoListItem';
+import * as MemoService from '../../src/services/memoService';
 import { type Label } from '../../src/types/label';
 import { type Memo } from '../../src/types/memo';
 
@@ -14,7 +15,6 @@ import { selectedLabelIdState } from '../../src/recoils/selectedLabelIdState';
 
 // ダミーのデータ
 import { LABEL_DATA } from '../../src/dummy_data/labelData';
-import { MEMO_DATA } from '../../src/dummy_data/memoData';
 
 /**
  * メモ一覧画面
@@ -37,16 +37,27 @@ export default function MemoListScreen() {
     });
   }, []);
 
-  useEffect(() => {
-    // ラベルリストを設定する
-    const labels = LABEL_DATA;
-    setLabels(labels);
+  useFocusEffect(
+    useCallback(() => {
+      const loadData = async (labelId: number | undefined) => {
+        try {
+          // ラベルリストを設定する
+          const labels = LABEL_DATA;
+          setLabels(labels);
 
-    // メモリストを設定する
-    // 選択されているラベルIDがある場合は、そのラベルに紐づくメモを表示する
-    const filteredMemos = selectedLabelId ? MEMO_DATA.filter(memo => memo.labelId === selectedLabelId) : MEMO_DATA;
-    setMemos(filteredMemos);
-  }, []);
+          // メモ一覧を取得する
+          const memos = await MemoService.getMemos();
+          const filteredMemos = labelId ? memos.filter(memo => memo.labelId === selectedLabelId) : memos;
+
+          setMemos(filteredMemos);
+        } catch (e) {
+          Alert.alert('エラー', 'データの取得に失敗しました', [{ text: 'OK', onPress: () => router.back() }]);
+        }
+      };
+
+      loadData(selectedLabelId);
+    }, [selectedLabelId])
+  );
 
   /**
    * 「メモ作成」が押されたときの処理
