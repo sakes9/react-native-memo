@@ -1,0 +1,32 @@
+[
+  {
+    "id": "3b35b1e9-be02-48f0-89a3-9c3b48caff5e",
+    "labelId": 1,
+    "title": "useStateについて",
+    "content": "useStateは関数コンポーネントで状態管理を行うフック機能である。\n従来はクラスコンポーネントでしか使用できなかったコンポーネントの状態管理は、React16.8から追加されたフック機能により関数コンポーネントでも使用可能になった。"
+  },
+  {
+    "id": "08154123-78f0-4ccd-8a8a-e61376050edc",
+    "labelId": 1,
+    "title": "useEffectについて",
+    "content": "関数コンポーネントでレンダリング後に実行されるフック機能"
+  },
+  {
+    "id": "3bec7b5e-906d-4678-8c17-6b8f2c987a95",
+    "labelId": 2,
+    "title": "アカウント１",
+    "content": "メールアドレス: abc123@sample.com\nパスワード: abc123"
+  },
+  {
+    "id": "b56b3792-5463-4f26-acba-30a863b17768",
+    "labelId": 2,
+    "title": "アカウント２",
+    "content": "メールアドレス: abc456@sample.com\nパスワード: abc456"
+  },
+  {
+    "id": "103c95f8-a4dc-47cc-a189-86af87dbaabe",
+    "labelId": 3,
+    "title": "オムライス",
+    "content": "卵: 2個\nごはん: 200g\n玉ねぎ: 1/4個\nケチャップ"
+  }
+]

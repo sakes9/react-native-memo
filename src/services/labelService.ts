@@ -81,4 +81,11 @@ const deleteLabel = async (id: number) => {
   await execute({ sql: LabelQueries.DELETE, params: [id] }, { sql: MemoQueries.UPDATE_TARGET_LABEL_ID_TO_NULL, params: [id] });
 };
 
-export { addLabel, createTable, deleteLabel, editLabel, getLabel, getLabels };
+/**
+ * シーケンスをリセット
+ */
+const resetSequence = async () => {
+  await execute({ sql: LabelQueries.RESET_SEQUENCE });
+};
+
+export { addLabel, createTable, deleteLabel, editLabel, getLabel, getLabels, resetSequence };

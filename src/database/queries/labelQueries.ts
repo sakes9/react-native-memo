@@ -88,13 +88,26 @@ const DeleteLabel = `
     id = ?
 `;
 
+/**
+ * ラベルIDのシーケンスをリセット
+ */
+const ResetSequence = `
+  UPDATE
+    sqlite_sequence
+  SET
+    seq = 0
+  WHERE
+    name = 'labels'
+`;
+
 const LabelQueries = Object.freeze({
   CREATE_TABLE: CreateTableLabels,
   SELECT_LABELS: SelectLabels,
   SELECT_LABEL_TARGET_ID: SelectLabelTargetId,
   INSERT: InsertLabel,
   UPDATE: UpdataLabel,
-  DELETE: DeleteLabel
+  DELETE: DeleteLabel,
+  RESET_SEQUENCE: ResetSequence
 });
 
 export { LabelQueries };
