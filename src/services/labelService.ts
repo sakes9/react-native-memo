@@ -62,4 +62,14 @@ const addLabel = async (name: string, color: string) => {
   await execute({ sql: LabelQueries.INSERT, params: [name, color] });
 };
 
-export { addLabel, createTable, getLabel, getLabels };
+/**
+ * ラベル修正
+ * @param id ラベルID
+ * @param name ラベル名
+ * @param color カラーコード
+ */
+const editLabel = async (id: number, name: string, color: string) => {
+  await execute({ sql: LabelQueries.UPDATE, params: [name, color, id] });
+};
+
+export { addLabel, createTable, editLabel, getLabel, getLabels };

@@ -60,11 +60,29 @@ const InsertLabel = `
   );
 `;
 
+/**
+ * ラベル更新
+ * @param name ラベル名
+ * @param color カラーコード
+ * @param id ラベルID
+ */
+const UpdataLabel = `
+  UPDATE
+    labels
+  SET
+    name = ?,
+    color = ?,
+    updated_at = (DATETIME('now','localtime'))
+  WHERE
+    id = ?
+`;
+
 const LabelQueries = Object.freeze({
   CREATE_TABLE: CreateTableLabels,
   SELECT_LABELS: SelectLabels,
   SELECT_LABEL_TARGET_ID: SelectLabelTargetId,
-  INSERT: InsertLabel
+  INSERT: InsertLabel,
+  UPDATE: UpdataLabel
 });
 
 export { LabelQueries };

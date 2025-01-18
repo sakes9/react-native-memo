@@ -3,6 +3,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 import { ColorPicker } from '../../src/components/ColorPicker';
+import { Indicator } from '../../src/components/Indicator';
 
 import * as LabelService from '../../src/services/labelService';
 
@@ -14,6 +15,8 @@ export default function LabelEditScreen() {
 
   const [labelName, setLabelName] = useState<string>(''); // ラベル名
   const [color, setColor] = useState<string | undefined>(undefined); // カラー
+
+  const [isLoading, setIsLoading] = useState<boolean>(false); // インジケーターの表示状態
 
   useEffect(() => {
     let isMounted = true;
@@ -58,8 +61,28 @@ export default function LabelEditScreen() {
   /**
    * 「修正」が押されたときの処理
    */
-  const handleEditPress = () => {
-    router.dismiss();
+  const handleEditPress = async () => {
+    // バリデーション
+    if (!labelName) {
+      Alert.alert('確認', 'ラベル名を入力してください');
+      return;
+    }
+    if (!color) {
+      Alert.alert('確認', 'カラーを選択してください');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // ラベルを修正する
+      await LabelService.editLabel(Number(id), labelName, color);
+      router.dismiss();
+    } catch (e) {
+      Alert.alert('エラー', 'ラベル修正に失敗しました');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   /**
@@ -88,6 +111,8 @@ export default function LabelEditScreen() {
           </Button>
         </VStack>
       </VStack>
+
+      <Indicator visible={isLoading} />
     </View>
   );
 }
