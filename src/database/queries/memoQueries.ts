@@ -115,6 +115,35 @@ const UpdateMemoTargetLabelIdToNull = `
     label_id = ?
 `;
 
+/**
+ * メモのラベル更新
+ * @param labelId ラベルID
+ * @param id メモID
+ */
+const UpdateMemoLabelIdById = `
+  UPDATE
+    memos
+  SET
+    label_id = ?,
+    updated_at = (DATETIME('now','localtime'))
+  WHERE
+    id = ?
+`;
+
+/**
+ * メモのラベルIDをNULLに更新
+ * @param id メモID
+ */
+const UpdateMemoLabelIdToNullById = `
+  UPDATE
+    memos
+  SET
+    label_id = NULL,
+    updated_at = (DATETIME('now','localtime'))
+  WHERE
+    id = ?
+`;
+
 const MemoQueries = Object.freeze({
   CREATE_TABLE: CreateTableMemos,
   SELECT_MEMOS: SelectMemos,
@@ -122,7 +151,9 @@ const MemoQueries = Object.freeze({
   INSERT: InsertMemo,
   UPDATE: UpdateMemo,
   DELETE: DeleteMemo,
-  UPDATE_TARGET_LABEL_ID_TO_NULL: UpdateMemoTargetLabelIdToNull
+  UPDATE_TARGET_LABEL_ID_TO_NULL: UpdateMemoTargetLabelIdToNull,
+  UPDATE_LABEL_ID_BY_ID: UpdateMemoLabelIdById,
+  UPDATE_LABEL_ID_TO_NULL_BY_ID: UpdateMemoLabelIdToNullById
 });
 
 export { MemoQueries };

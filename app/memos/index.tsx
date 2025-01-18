@@ -25,6 +25,7 @@ export default function MemoListScreen() {
   const [labels, setLabels] = useState<Label[]>([]); // ラベルリスト
   const [memos, setMemos] = useState<Memo[]>([]); // メモリスト
   const selectedLabel = labels.find(label => label.id === selectedLabelId); // 選択されているラベルの情報
+  const [selectedMemoId, setSelectedMemoId] = useState<string | undefined>(); // メモIDの一時保存
 
   const [isLabelListModalVisible, setIsLabelListModalVisible] = useState(false); // ラベルリストモーダルの表示状態
   const [isLoading, setIsLoading] = useState<boolean>(false); // インジケータの表示状態
@@ -79,7 +80,7 @@ export default function MemoListScreen() {
    * @param memoId メモID
    */
   const handleMemoLongPress = (memoId: string) => {
-    console.log('メモが長押しされました', memoId);
+    setSelectedMemoId(memoId);
     setIsLabelListModalVisible(true);
   };
 
@@ -104,15 +105,35 @@ export default function MemoListScreen() {
    * ラベルが選択された時の処理
    * @param labelId ラベルID
    */
-  const handleLabelPress = (labelId?: number) => {
-    console.log('ラベルが押されました', labelId);
-    setIsLabelListModalVisible(false);
+  const handleLabelPress = async (labelId?: number) => {
+    if (selectedMemoId === undefined) {
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      await MemoService.setLabel(selectedMemoId, labelId);
+
+      // メモリストを更新する
+      const memos = await MemoService.getMemos();
+      setMemos(memos);
+
+      // 後処理
+      setSelectedMemoId(undefined);
+      setIsLabelListModalVisible(false);
+    } catch (e) {
+      Alert.alert('エラー', 'ラベルの設定に失敗しました', [{ text: 'OK' }]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   /**
    * ラベルリストモーダルで閉じるボタンが押されたときの処理
    */
   const handleLabelListModalClose = () => {
+    setSelectedMemoId(undefined);
     setIsLabelListModalVisible(false);
   };
 
