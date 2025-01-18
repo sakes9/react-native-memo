@@ -4,7 +4,7 @@ import * as SQLite from 'expo-sqlite';
 /**
  * SQL引数
  */
-type SqlArg = {
+export type SqlArg = {
   sql: string; // SQL文
   params?: (string | number)[]; // パラメーター
 };

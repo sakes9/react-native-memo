@@ -45,7 +45,7 @@ export default function MemoCreateScreen() {
 
     try {
       // メモを追加する
-      await MemoService.addMemo(title, content);
+      await MemoService.addMemo(selectedLabelId, title, content);
       router.back();
     } catch (e) {
       Alert.alert('エラー', 'メモの追加に失敗しました');

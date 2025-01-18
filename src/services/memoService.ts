@@ -1,5 +1,5 @@
 import * as Crypto from 'expo-crypto';
-import { execute, fetch } from '../database/dbService';
+import { execute, fetch, type SqlArg } from '../database/dbService';
 import { MemoQueries } from '../database/queries/memoQueries';
 import { MemoSchema } from '../database/schemas/memoSchema';
 import { type Memo } from '../types/memo';
@@ -58,12 +58,23 @@ const getMemo = async (memoId: string): Promise<Memo | undefined> => {
 
 /**
  * メモ追加
+ * @param labelId メモに設定するラベルのID
  * @param title メモのタイトル
  * @param content メモの内容
  */
-const addMemo = async (title: string, content: string) => {
+const addMemo = async (labelId: number | undefined, title: string, content: string) => {
   const memoId = Crypto.randomUUID();
-  await execute({ sql: MemoQueries.INSERT, params: [memoId, title, content] });
+  let queries: SqlArg[] = [];
+
+  // メモ追加
+  queries.push({ sql: MemoQueries.INSERT, params: [memoId, title, content] });
+
+  // ラベルIDが指定されている場合は、メモにラベルを設定する
+  if (labelId !== undefined) {
+    queries.push({ sql: MemoQueries.UPDATE_LABEL_ID_BY_ID, params: [labelId, memoId] });
+  }
+
+  await execute(...queries);
 };
 
 /**
