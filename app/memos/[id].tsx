@@ -2,6 +2,7 @@ import { KeyboardAvoidingView } from '@gluestack-ui/themed';
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert, Button, StyleSheet } from 'react-native';
+import { Indicator } from '../../src/components/Indicator';
 import { MemoInputForm } from '../../src/components/MemoInputForm';
 import * as MemoService from '../../src/services/memoService';
 
@@ -15,13 +16,15 @@ export default function MemoEditScreen() {
   const [title, setTitle] = useState<string>(''); // タイトル
   const [content, setContent] = useState<string>(''); // 内容
 
+  const [isLoading, setIsLoading] = useState<boolean>(false); // インジケーターの表示状態
+
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => {
         return <Button title="保存" onPress={handleSavePress} />;
       }
     });
-  }, []);
+  }, [title, content]);
 
   useEffect(() => {
     let isMounted = true;
@@ -57,13 +60,31 @@ export default function MemoEditScreen() {
   /**
    * 「保存」が押されたときの処理
    */
-  const handleSavePress = () => {
-    router.back();
+  const handleSavePress = async () => {
+    // バリデーション
+    if (!title) {
+      Alert.alert('確認', 'タイトルを入力してください');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // メモを更新する
+      await MemoService.editMemo(id, title, content);
+      router.back();
+    } catch (e) {
+      Alert.alert('エラー', 'メモの保存に失敗しました');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding" keyboardVerticalOffset={100}>
       <MemoInputForm title={title} content={content} onTitleChange={setTitle} onContentChange={setContent} />
+
+      <Indicator visible={isLoading} />
     </KeyboardAvoidingView>
   );
 }

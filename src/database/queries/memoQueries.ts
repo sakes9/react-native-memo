@@ -74,11 +74,29 @@ const InsertMemo = `
   );
 `;
 
+/**
+ * メモ更新
+ * @param title タイトル
+ * @param content 内容
+ * @param id メモID
+ */
+const UpdateMemo = `
+  UPDATE
+    memos
+  SET
+    title = ?,
+    content = ?,
+    updated_at = (DATETIME('now','localtime'))
+  WHERE
+    id = ?
+`;
+
 const MemoQueries = Object.freeze({
   CREATE_TABLE: CreateTableMemos,
   SELECT_MEMOS: SelectMemos,
   SELECT_MEMO_TARGET_ID: SelectMemoTargetId,
-  INSERT: InsertMemo
+  INSERT: InsertMemo,
+  UPDATE: UpdateMemo
 });
 
 export { MemoQueries };
