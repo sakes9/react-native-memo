@@ -12,8 +12,24 @@ const CreateTableLabels = `
   );
 `;
 
+/**
+ * ラベル追加
+ * @param name ラベル名
+ * @param color カラーコード
+ */
+const InsertLabel = `
+  INSERT INTO labels (
+    name,
+    color
+  ) VALUES (
+    ?,
+    ?
+  );
+`;
+
 const LabelQueries = Object.freeze({
-  CREATE_TABLE: CreateTableLabels
+  CREATE_TABLE: CreateTableLabels,
+  INSERT: InsertLabel
 });
 
 export { LabelQueries };
