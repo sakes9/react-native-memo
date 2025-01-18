@@ -1,8 +1,10 @@
 import { Button, ButtonText, Input, InputField, VStack } from '@gluestack-ui/themed';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Alert, StyleSheet, View } from 'react-native';
 import { ColorPicker } from '../../src/components/ColorPicker';
+
+import * as LabelService from '../../src/services/labelService';
 
 /**
  * ラベル修正画面
@@ -12,6 +14,38 @@ export default function LabelEditScreen() {
 
   const [labelName, setLabelName] = useState<string>(''); // ラベル名
   const [color, setColor] = useState<string | undefined>(undefined); // カラー
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadData = async (labelId: number) => {
+      try {
+        // ラベルを取得する
+        const label = await LabelService.getLabel(labelId);
+
+        // ラベルが存在しない場合はエラーを表示して戻る
+        if (!label) {
+          Alert.alert('エラー', 'ラベルが見つかりませんでした', [{ text: 'OK', onPress: () => router.back() }]);
+          return;
+        }
+
+        // ラベルの名前とカラーをセットする
+        setLabelName(label.name);
+        setColor(label.color);
+      } catch (e) {
+        Alert.alert('エラー', 'データの取得に失敗しました', [{ text: 'OK', onPress: () => router.back() }]);
+      }
+    };
+
+    if (isMounted) {
+      const labelId = Number(id);
+      loadData(labelId);
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [id]);
 
   /**
    * カラーピッカーで色が選択された時の処理
@@ -39,10 +73,10 @@ export default function LabelEditScreen() {
     <View style={styles.container}>
       <VStack space="lg">
         <Input variant="underlined" size="md" backgroundColor="$white" borderColor="$warmGray300">
-          <InputField paddingLeft={'$2'} placeholder="ラベル名" onChangeText={setLabelName} />
+          <InputField defaultValue={labelName} paddingLeft={'$2'} placeholder="ラベル名" onChangeText={setLabelName} />
         </Input>
 
-        <ColorPicker onPress={handleColorPress} />
+        <ColorPicker onPress={handleColorPress} defaultColor={color} />
 
         <VStack space="md">
           <Button size="md" action="primary" marginHorizontal={'$4'} onPress={handleEditPress}>

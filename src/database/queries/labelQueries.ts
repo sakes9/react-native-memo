@@ -29,6 +29,23 @@ const SelectLabels = `
 `;
 
 /**
+ * ラベルIDを指定してラベルを取得
+ * @param id ラベルID
+ */
+const SelectLabelTargetId = `
+  SELECT
+    id,
+    name,
+    color,
+    created_at,
+    updated_at
+  FROM
+    labels
+  WHERE
+    id = ?
+`;
+
+/**
  * ラベル追加
  * @param name ラベル名
  * @param color カラーコード
@@ -46,6 +63,7 @@ const InsertLabel = `
 const LabelQueries = Object.freeze({
   CREATE_TABLE: CreateTableLabels,
   SELECT_LABELS: SelectLabels,
+  SELECT_LABEL_TARGET_ID: SelectLabelTargetId,
   INSERT: InsertLabel
 });
 
