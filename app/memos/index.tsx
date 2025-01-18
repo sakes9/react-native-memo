@@ -6,6 +6,7 @@ import { Indicator } from '../../src/components/Indicator';
 import { LabelListModal } from '../../src/components/LabelListModal';
 import { LabelTag } from '../../src/components/LabelTag';
 import { MemoListItem } from '../../src/components/MemoListItem';
+import * as LabelService from '../../src/services/labelService';
 import * as MemoService from '../../src/services/memoService';
 import { type Label } from '../../src/types/label';
 import { type Memo } from '../../src/types/memo';
@@ -13,9 +14,6 @@ import { type Memo } from '../../src/types/memo';
 // Recoil
 import { useRecoilValue } from 'recoil';
 import { selectedLabelIdState } from '../../src/recoils/selectedLabelIdState';
-
-// ダミーのデータ
-import { LABEL_DATA } from '../../src/dummy_data/labelData';
 
 /**
  * メモ一覧画面
@@ -44,7 +42,7 @@ export default function MemoListScreen() {
       const loadData = async (labelId: number | undefined) => {
         try {
           // ラベルリストを設定する
-          const labels = LABEL_DATA;
+          const labels = await LabelService.getLabels();
           setLabels(labels);
 
           // メモ一覧を取得する

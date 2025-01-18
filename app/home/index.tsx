@@ -1,22 +1,24 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { ListItem } from '@rneui/themed';
-import { router, useNavigation } from 'expo-router';
-import { useEffect } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { router, useFocusEffect, useNavigation } from 'expo-router';
+import { useCallback, useEffect, useState } from 'react';
+import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { LabelListItem } from '../../src/components/LabelListItem';
+
+import * as LabelService from '../../src/services/labelService';
+import { type Label } from '../../src/types/label';
 
 // Recoil
 import { useRecoilState } from 'recoil';
 import { selectedLabelIdState } from '../../src/recoils/selectedLabelIdState';
-
-// ダミーデータ
-import { LABEL_DATA } from '../../src/dummy_data/labelData';
 
 /**
  * ホーム画面
  */
 export default function HomeScreen() {
   const navigation = useNavigation();
+
+  const [labels, setLabels] = useState<Label[]>([]); // ラベルリスト
 
   const [selectedLabelId, setSelectedLabelId] = useRecoilState(selectedLabelIdState);
 
@@ -27,6 +29,22 @@ export default function HomeScreen() {
       }
     });
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      const loadData = async () => {
+        try {
+          // ラベル一覧を取得する
+          const labels = await LabelService.getLabels();
+          setLabels(labels);
+        } catch (e) {
+          Alert.alert('エラー', 'データの取得に失敗しました', [{ text: 'OK' }]);
+        }
+      };
+
+      loadData();
+    }, [])
+  );
 
   /**
    * 「すべてのメモ」た押された時の処理
@@ -74,7 +92,7 @@ export default function HomeScreen() {
         <Text style={styles.sectionText}>ラベル</Text>
 
         {/* ラベルリスト */}
-        {LABEL_DATA.map(item => (
+        {labels.map(item => (
           <LabelListItem
             key={item.id}
             color={item.color}

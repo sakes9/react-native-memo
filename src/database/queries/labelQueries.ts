@@ -13,6 +13,22 @@ const CreateTableLabels = `
 `;
 
 /**
+ * 全てのラベルを取得
+ */
+const SelectLabels = `
+  SELECT
+    id,
+    name,
+    color,
+    created_at,
+    updated_at
+  FROM
+    labels
+  ORDER BY
+    created_at ASC
+`;
+
+/**
  * ラベル追加
  * @param name ラベル名
  * @param color カラーコード
@@ -29,6 +45,7 @@ const InsertLabel = `
 
 const LabelQueries = Object.freeze({
   CREATE_TABLE: CreateTableLabels,
+  SELECT_LABELS: SelectLabels,
   INSERT: InsertLabel
 });
 
