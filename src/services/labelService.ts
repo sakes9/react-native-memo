@@ -1,5 +1,6 @@
 import { execute, fetch } from '../database/dbService';
 import { LabelQueries } from '../database/queries/labelQueries';
+import { MemoQueries } from '../database/queries/memoQueries';
 import { type LabelSchema } from '../database/schemas/labelSchema';
 import { type Label } from '../types/label';
 
@@ -72,4 +73,12 @@ const editLabel = async (id: number, name: string, color: string) => {
   await execute({ sql: LabelQueries.UPDATE, params: [name, color, id] });
 };
 
-export { addLabel, createTable, editLabel, getLabel, getLabels };
+/**
+ * ラベル削除
+ * @param id ラベルID
+ */
+const deleteLabel = async (id: number) => {
+  await execute({ sql: LabelQueries.DELETE, params: [id] }, { sql: MemoQueries.UPDATE_TARGET_LABEL_ID_TO_NULL, params: [id] });
+};
+
+export { addLabel, createTable, deleteLabel, editLabel, getLabel, getLabels };

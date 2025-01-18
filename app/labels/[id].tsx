@@ -89,7 +89,24 @@ export default function LabelEditScreen() {
    * 「削除」が押されたときの処理
    */
   const handleDeletePress = () => {
-    router.dismiss();
+    const deleteLabel = async () => {
+      setIsLoading(true);
+
+      try {
+        // ラベルを削除する
+        await LabelService.deleteLabel(Number(id));
+        router.dismiss();
+      } catch (e) {
+        Alert.alert('エラー', 'ラベル削除に失敗しました');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    Alert.alert('確認', 'ラベルを削除しますか？', [
+      { text: 'キャンセル', onPress: () => {} },
+      { text: '削除', onPress: deleteLabel }
+    ]);
   };
 
   return (

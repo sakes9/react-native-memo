@@ -102,13 +102,27 @@ const DeleteMemo = `
     id = ?
 `;
 
+/**
+ * ラベル削除時に、削除されたラベルに紐づくメモのラベルIDをNULLに更新
+ */
+const UpdateMemoTargetLabelIdToNull = `
+  UPDATE
+    memos
+  SET
+    label_id = NULL,
+    updated_at = (DATETIME('now','localtime'))
+  WHERE
+    label_id = ?
+`;
+
 const MemoQueries = Object.freeze({
   CREATE_TABLE: CreateTableMemos,
   SELECT_MEMOS: SelectMemos,
   SELECT_MEMO_TARGET_ID: SelectMemoTargetId,
   INSERT: InsertMemo,
   UPDATE: UpdateMemo,
-  DELETE: DeleteMemo
+  DELETE: DeleteMemo,
+  UPDATE_TARGET_LABEL_ID_TO_NULL: UpdateMemoTargetLabelIdToNull
 });
 
 export { MemoQueries };
