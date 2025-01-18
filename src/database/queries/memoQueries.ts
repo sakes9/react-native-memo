@@ -91,12 +91,24 @@ const UpdateMemo = `
     id = ?
 `;
 
+/**
+ * メモ削除
+ * @param id メモID
+ */
+const DeleteMemo = `
+  DELETE FROM
+    memos
+  WHERE
+    id = ?
+`;
+
 const MemoQueries = Object.freeze({
   CREATE_TABLE: CreateTableMemos,
   SELECT_MEMOS: SelectMemos,
   SELECT_MEMO_TARGET_ID: SelectMemoTargetId,
   INSERT: InsertMemo,
-  UPDATE: UpdateMemo
+  UPDATE: UpdateMemo,
+  DELETE: DeleteMemo
 });
 
 export { MemoQueries };

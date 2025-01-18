@@ -76,4 +76,12 @@ const editMemo = async (memoId: string, title: string, content: string) => {
   await execute({ sql: MemoQueries.UPDATE, params: [title, content, memoId] });
 };
 
-export { addMemo, createTable, editMemo, getMemo, getMemos };
+/**
+ * メモ削除
+ * @param memoId 削除対象のメモのID
+ */
+const deleteMemo = async (memoId: string) => {
+  await execute({ sql: MemoQueries.DELETE, params: [memoId] });
+};
+
+export { addMemo, createTable, deleteMemo, editMemo, getMemo, getMemos };
