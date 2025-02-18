@@ -6,9 +6,9 @@ import { Indicator } from '../../src/components/Indicator';
 import { MemoInputForm } from '../../src/components/MemoInputForm';
 import * as MemoService from '../../src/services/memoService';
 
-// Recoil
-import { useRecoilValue } from 'recoil';
-import { selectedLabelIdState } from '../../src/recoils/selectedLabelIdState';
+// Jotai
+import { useAtomValue } from 'jotai';
+import { selectedLabelIdState } from '../../src/jotai/selectedLabelIdState';
 
 /**
  * メモ作成画面
@@ -16,7 +16,7 @@ import { selectedLabelIdState } from '../../src/recoils/selectedLabelIdState';
 export default function MemoCreateScreen() {
   const navigation = useNavigation();
 
-  const selectedLabelId = useRecoilValue(selectedLabelIdState); // 選択されているラベルID
+  const selectedLabelId = useAtomValue(selectedLabelIdState); // 選択されているラベルID
 
   const [title, setTitle] = useState<string>(''); // タイトル
   const [content, setContent] = useState<string>(''); // 内容

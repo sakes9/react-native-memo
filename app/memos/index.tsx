@@ -11,9 +11,9 @@ import * as MemoService from '../../src/services/memoService';
 import { type Label } from '../../src/types/label';
 import { type Memo } from '../../src/types/memo';
 
-// Recoil
-import { useRecoilValue } from 'recoil';
-import { selectedLabelIdState } from '../../src/recoils/selectedLabelIdState';
+// Jotai
+import { useAtomValue } from 'jotai';
+import { selectedLabelIdState } from '../../src/jotai/selectedLabelIdState';
 
 /**
  * メモ一覧画面
@@ -21,7 +21,7 @@ import { selectedLabelIdState } from '../../src/recoils/selectedLabelIdState';
 export default function MemoListScreen() {
   const navigation = useNavigation();
 
-  const selectedLabelId = useRecoilValue(selectedLabelIdState); // 選択されているラベルID
+  const selectedLabelId = useAtomValue(selectedLabelIdState); // 選択されているラベルID
   const [labels, setLabels] = useState<Label[]>([]); // ラベルリスト
   const [memos, setMemos] = useState<Memo[]>([]); // メモリスト
   const selectedLabel = labels.find(label => label.id === selectedLabelId); // 選択されているラベルの情報

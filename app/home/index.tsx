@@ -8,9 +8,9 @@ import { LabelListItem } from '../../src/components/LabelListItem';
 import * as LabelService from '../../src/services/labelService';
 import { type Label } from '../../src/types/label';
 
-// Recoil
-import { useRecoilState } from 'recoil';
-import { selectedLabelIdState } from '../../src/recoils/selectedLabelIdState';
+// Jotai
+import { useAtom } from 'jotai';
+import { selectedLabelIdState } from '../../src/jotai/selectedLabelIdState';
 
 /**
  * ホーム画面
@@ -20,7 +20,7 @@ export default function HomeScreen() {
 
   const [labels, setLabels] = useState<Label[]>([]); // ラベルリスト
 
-  const [selectedLabelId, setSelectedLabelId] = useRecoilState(selectedLabelIdState);
+  const [selectedLabelId, setSelectedLabelId] = useAtom(selectedLabelIdState);
 
   useEffect(() => {
     navigation.setOptions({
